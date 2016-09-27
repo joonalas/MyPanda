@@ -16,7 +16,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
         android:id="@+id/editText"
-        android:text="@string/edit_message" />
+        android:hint="@string/edit_message" />
 
     <Button
         android:layout_width="wrap_content"
@@ -25,5 +25,17 @@
         android:id="@+id/button"
         android:layout_alignParentEnd="true"
         android:layout_toEndOf="@+id/editText"
-        android:text="@string/send_btn" />
+        android:text="@string/send_btn"
+        android:onClick="sendMessage"/>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/editText"
+        android:id="@+id/messages_layout">
+
+    </LinearLayout>
 </RelativeLayout>

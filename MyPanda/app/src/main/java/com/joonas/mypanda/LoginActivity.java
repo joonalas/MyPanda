@@ -1,5 +1,6 @@
 package com.joonas.mypanda;
 
+import android.content.Intent;
 import android.nfc.Tag;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -27,13 +29,24 @@ public class LoginActivity extends AppCompatActivity {
         checkConnection();
     }
 
-    public void checkConnection() {
-        if(SocketSingleton.getSocket()!=null) {
+    public void login(View view) {
+        EditText setUsername = (EditText)findViewById(R.id.setUsername);
+        if(!setUsername.getText().toString().isEmpty()){
+            Intent startMain = new Intent(this, MainActivity.class);
+            startMain.putExtra("com.joonas.MyPanda.EXTRA_MESSAGE", setUsername.getText().toString());
+            startActivity(startMain);
             finish();
+        }
+    }
+
+    public void checkConnection() {
+        RelativeLayout mainLayout = (RelativeLayout)findViewById(R.id.activity_login);
+        if(SocketSingleton.getSocket()!=null) {
+            View loginLayout = LayoutInflater.from(this).inflate(R.layout.layout_login, mainLayout, false);
+            mainLayout.addView(loginLayout);
         } else {
-            RelativeLayout loginLayout = (RelativeLayout)findViewById(R.id.activity_login);
-            View loginLayoutInflated = LayoutInflater.from(this).inflate(R.layout.layout_no_connection, loginLayout, false);
-            loginLayout.addView(loginLayoutInflated);
+            View errorLayout = LayoutInflater.from(this).inflate(R.layout.layout_no_connection, mainLayout, false);
+            mainLayout.addView(errorLayout);
         }
     }
 

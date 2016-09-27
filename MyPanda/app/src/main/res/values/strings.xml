@@ -4,4 +4,10 @@
     <string name="edit_message">Type something...</string>
     <string name="error_no_connection">Server connection failure.</string>
     <string name="try_again_btn">RECONNECT</string>
+    <string name="login_hint">Username</string>
+    <string name="login_btn">LOGIN</string>
+    <string name="c_user">:user</string>
+    <string name="c_list">:list</string>
+    <string name="c_history">:history</string>
+    <string name="c_quit">:quit</string>
 </resources>
