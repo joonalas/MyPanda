@@ -58,18 +58,34 @@ public class MainActivity extends AppCompatActivity {
         } catch(IOException e) {
             e.printStackTrace();
         }
-        toServer.println(getString(R.string.c_user) + " " + getIntent().getStringExtra("com.joonas.MyPanda.EXTRA_MESSAGE"));
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                toServer.println(getString(R.string.c_user) + " " + getIntent().getStringExtra("com.joonas.MyPanda.EXTRA_MESSAGE"));
+            }
+        }).start();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        toServer.println(getString(R.string.c_quit));
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                toServer.println(getString(R.string.c_quit));
+            }
+        }).start();
     }
 
     public void sendMessage(View view) {
         //EditText editedMessage = (EditText)findViewById(R.id.editText);
-        toServer.println(editedMessage.getText().toString());
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                toServer.println(editedMessage.getText().toString());
+            }
+        }).start();
         editedMessage.setText("");
         editedMessage.clearFocus();
     }
