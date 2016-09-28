@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridLayout;
@@ -26,11 +27,23 @@ import java.util.zip.Inflater;
 
 public class MainActivity extends AppCompatActivity {
     private PrintWriter toServer;
+    private EditText editedMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        editedMessage = (EditText)findViewById(R.id.editText);
+
+        editedMessage.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(v.getId() == R.id.editText && !hasFocus) {
+                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                }
+            }
+        });
 
         /*Commmands are sent to the server via PrintWriter
         * commands are:
@@ -55,9 +68,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void sendMessage(View view) {
-        EditText editedMessage = (EditText)findViewById(R.id.editText);
+        //EditText editedMessage = (EditText)findViewById(R.id.editText);
         toServer.println(editedMessage.getText().toString());
         editedMessage.setText("");
+        editedMessage.clearFocus();
     }
 
     public class MessageListener implements Runnable {
