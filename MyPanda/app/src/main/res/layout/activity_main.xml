@@ -10,6 +10,20 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.joonas.mypanda.MainActivity">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/button"
+        android:id="@+id/chat_scroll">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/messages_layout">
+
+        </LinearLayout>
+    </ScrollView>
+
     <EditText
         android:layout_width="250dp"
         android:layout_height="wrap_content"
@@ -28,14 +42,5 @@
         android:text="@string/send_btn"
         android:onClick="sendMessage"/>
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_above="@+id/editText"
-        android:id="@+id/messages_layout">
 
-    </LinearLayout>
 </RelativeLayout>

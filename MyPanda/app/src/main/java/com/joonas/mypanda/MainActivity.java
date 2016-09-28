@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.io.BufferedReader;
@@ -25,7 +26,7 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.util.zip.Inflater;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements Observer {
     private PrintWriter toServer;
     private EditText editedMessage;
 
@@ -41,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
                 if(v.getId() == R.id.editText && !hasFocus) {
                     InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                    ((ScrollView) findViewById(R.id.chat_scroll)).fullScroll(View.FOCUS_DOWN);
                 }
             }
         });
@@ -88,7 +90,17 @@ public class MainActivity extends AppCompatActivity {
         }).start();
         editedMessage.setText("");
         editedMessage.clearFocus();
+
     }
+
+    @Override
+    public void update(String message) {
+
+    }
+
+
+
+
 
     public class MessageListener implements Runnable {
         private BufferedReader in;
@@ -125,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         private void printMessage(String m) {
-            final LinearLayout messagesLayout = (LinearLayout)findViewById(R.id.messages_layout);
+            final LinearLayout messagesLayout = (LinearLayout) findViewById(R.id.messages_layout);
             LinearLayout.LayoutParams messageParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT);
             messageParams.setMargins(5, 5, 5, 5);
