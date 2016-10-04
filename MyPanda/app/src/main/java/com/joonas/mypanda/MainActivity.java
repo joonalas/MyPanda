@@ -55,8 +55,16 @@ public class MainActivity extends AppCompatActivity implements Observer {
         *   -quit
          */
         try {
-            new Thread(new MessageListener(SocketSingleton.getSocket().getInputStream(), this)).start();
-            toServer = new PrintWriter(new OutputStreamWriter(SocketSingleton.getSocket().getOutputStream(), "UTF-8"), true);
+            Thread listenThread = new Thread(new MessageListener(SocketSingleton.getSocket().getInputStream()));
+            listenThread.isDaemon();
+            listenThread.start();
+            /**/
+            toServer = new PrintWriter(
+                    /*we cannot pass sockets inputstream straight to the printwriters constructor.
+                    * Make new OutputStreamWriter out from sockets inputstream*/
+                    new OutputStreamWriter(SocketSingleton.getSocket().getOutputStream(), "UTF-8"),
+                    //autoflush
+                    true);
         } catch(IOException e) {
             e.printStackTrace();
         }
@@ -82,10 +90,11 @@ public class MainActivity extends AppCompatActivity implements Observer {
 
     public void sendMessage(View view) {
         //EditText editedMessage = (EditText)findViewById(R.id.editText);
+        final String insertedText = editedMessage.getText().toString();
         new Thread(new Runnable() {
             @Override
             public void run() {
-                toServer.println(editedMessage.getText().toString());
+                toServer.println(insertedText);
             }
         }).start();
         editedMessage.setText("");
@@ -93,9 +102,26 @@ public class MainActivity extends AppCompatActivity implements Observer {
 
     }
 
-    @Override
-    public void update(String message) {
+    /*History:\n
+    * username@yyyy-MM-dd hh:mm:ss.sss:messagetext\n
+    * nextmessage*/
 
+    @Override
+    public void update(String m) {
+        LinearLayout.LayoutParams messageParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        messageParams.setMargins(5, 5, 5, 5);
+        final TextView message = new TextView(this);
+        message.setLayoutParams(messageParams);
+        message.setText(m);
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                LinearLayout messagesLayout = (LinearLayout) findViewById(R.id.messages_layout);
+                messagesLayout.addView(message);
+            }
+        });
     }
 
 
@@ -104,10 +130,8 @@ public class MainActivity extends AppCompatActivity implements Observer {
 
     public class MessageListener implements Runnable {
         private BufferedReader in;
-        private Context mainContext;
 
-        public MessageListener(InputStream inFromServer, Context context) {
-            this.mainContext = context;
+        public MessageListener(InputStream inFromServer) {
             try {
                 in = new BufferedReader(new InputStreamReader(inFromServer, "UTF-8"));
             } catch(UnsupportedEncodingException e) {
@@ -127,29 +151,13 @@ public class MainActivity extends AppCompatActivity implements Observer {
                             finish();
                             break;
                         default:
-                            printMessage(message);
+                            update(message);
                             break;
                     }
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
             }
-        }
-
-        private void printMessage(String m) {
-            final LinearLayout messagesLayout = (LinearLayout) findViewById(R.id.messages_layout);
-            LinearLayout.LayoutParams messageParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT);
-            messageParams.setMargins(5, 5, 5, 5);
-            final TextView message = new TextView(mainContext);
-            message.setLayoutParams(messageParams);
-            message.setText(m);
-            messagesLayout.post(new Runnable() {
-                @Override
-                public void run() {
-                    messagesLayout.addView(message);
-                }
-            });
         }
     }
 

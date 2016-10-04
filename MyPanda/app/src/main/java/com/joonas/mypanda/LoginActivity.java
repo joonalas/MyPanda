@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
 
+/*this is the launcher activity which handles signing in*/
+
 public class LoginActivity extends AppCompatActivity {
 
     @Override
@@ -30,6 +32,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void login(View view) {
+        /*get the text in edittextview and if it's */
         EditText setUsername = (EditText)findViewById(R.id.setUsername);
         if(!setUsername.getText().toString().isEmpty()){
             Intent startMain = new Intent(this, MainActivity.class);
@@ -61,7 +64,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                    byte[] addressBytes = {(byte) (87), (byte) (95), (byte) (52), (byte) (167)};
+                    byte[] addressBytes = {(byte) (10), (byte) (112), (byte) (199), (byte) (211)};
                     InetAddress address = InetAddress.getByAddress(addressBytes);
                     SocketSingleton.setSocket(new Socket(address, 52828));
                 } catch (IOException e) {
